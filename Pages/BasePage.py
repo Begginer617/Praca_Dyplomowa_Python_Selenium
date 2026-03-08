@@ -1,38 +1,49 @@
+import time
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-
 class BasePage:
-    # Konstruktor – uruchamia się przy tworzeniu obiektu strony.
-    # Przechowuje driver i tworzy WebDriverWait, żeby nie klikać za szybko.
-    def __init__(self, driver):
+    # Konstruktor klasy.
+    # slow=True → test działa wolniej (do podglądu).
+    # delay → ile sekund czekać przed akcją.
+    def __init__(self, driver, slow=True, delay=0.03):
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
+        self.slow = slow
+        self.delay = delay
 
-    # Metoda do klikania w element.
-    # Czeka aż element będzie klikalny (czyli widoczny i niezasłonięty),
-    # a dopiero potem wykonuje click().
+    # Prywatna metoda – pauza tylko gdy slow=True.
+    def _pause(self):
+        if self.slow:
+            time.sleep(self.delay)
+
+    # Klikanie w element.
+    # Dodajemy pauzę PRZED kliknięciem, żeby widzieć co zostało wpisane.
     def click(self, locator):
-        self.wait.until(EC.element_to_be_clickable(locator)).click()
+        element = self.wait.until(EC.element_to_be_clickable(locator))
+        self._pause()  # ← tu spowalniamy kliknięcie submit
+        element.click()
 
-    # Metoda do wpisywania tekstu w pole.
-    # 1. Czeka aż pole będzie widoczne.
-    # 2. Czyści pole (clear), żeby nie mieszać tekstu.
-    # 3. Wpisuje podany tekst.
+    # Wpisywanie tekstu.
+    # Jeśli slow=True → wpisuje znak po znaku, jak człowiek.
     def type(self, locator, text):
         element = self.wait.until(EC.visibility_of_element_located(locator))
         element.clear()
-        element.send_keys(text)
 
-    # Metoda do pobierania tekstu z elementu.
-    # Czeka aż element będzie widoczny i zwraca jego tekst.
-    # Używane np. do asercji w testach.
+        if self.slow:
+            # wpisywanie wolne, litera po literze
+            for char in text:
+                element.send_keys(char)
+                time.sleep(self.delay)
+        else:
+            # normalne szybkie wpisywanie
+            element.send_keys(text)
+
+    # Pobieranie tekstu z elementu.
     def get_text(self, locator):
         return self.wait.until(EC.visibility_of_element_located(locator)).text
 
-    # Metoda sprawdzająca, czy element jest widoczny na stronie.
-    # Jeśli Selenium nie znajdzie elementu w czasie oczekiwania → zwróci False.
-    # Przydatne do warunków typu: "czy komunikat o błędzie się pojawił?"
+    # Sprawdza widoczność elementu.
     def is_visible(self, locator):
         try:
             self.wait.until(EC.visibility_of_element_located(locator))
@@ -40,4 +51,10 @@ class BasePage:
         except:
             return False
 
+    # Zwraca element bez akcji.
+    def find(self, locator):
+        return self.wait.until(EC.presence_of_element_located(locator))
 
+    # Czeka na dowolny warunek Selenium.
+    def wait_for(self, condition):
+        return self.wait.until(condition)

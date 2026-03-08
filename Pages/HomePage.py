@@ -1,32 +1,39 @@
+from Pages.BasePage import BasePage
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from Pages.BasePage import BasePage
 
 
 class HomePage(BasePage):
-    # LOCAKALIZATORY
 
     URL = "https://automationintesting.online/"
 
-    BOOK_NOW = (By.XPATH, "//a[contains(@href, '#booking')]")
-    CHECK_AVAILABILITY = (By.XPATH, "//a[contains(@class,'openBooking')]")
-    CHECK_IN = (By.XPATH, "//input[@id='checkin']")
-    CHECK_OUT = (By.XPATH, "//input[@id='checkout']")
-    WELCOME_TEXT = (By.XPATH, "//p[contains(@class,'lead')]")
-
-    # METODY
+    Send_Us_A_Message_Name = (By.ID, "name")
+    Send_Us_A_Message_Email = (By.ID, "email")
+    Send_Us_A_Message_Phone = (By.ID, "phone")
+    Send_Us_A_Message_Subject = (By.ID, "subject")
+    Send_Us_A_Message_Message = (By.ID, "description")
+    Send_Us_A_Message_Submit_Button = (By.XPATH, '//*[@id="contact"]//button')
 
     def open(self):
         self.driver.get(self.URL)
+        return self
 
-    def click_check_availability_to_booking(self):
-        self.click(self.CHECK_AVAILABILITY)
+    def fill_contact_form_with_fake_data(self, data):
+        # przewiń do formularza
+        form = self.wait.until(EC.presence_of_element_located(self.Send_Us_A_Message_Name))
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", form)
 
-    # Metoda sprawdzająca czy tekst się nie zmienił
-    def get_text(self, locator):
-        # Znajdujemy element na stronie
-        element = self.driver.find_element(*locator)
-        # Sprawdzamy, czy jest widoczny
-        assert element.is_displayed()
-        # Czekamy aż Selenium potwierdzi widoczność i zwracamy tekst
-        return self.wait.until(EC.visibility_of_element_located(locator)).text
+        self.type(self.Send_Us_A_Message_Name, data.name())
+        self.type(self.Send_Us_A_Message_Email, data.email())
+        self.type(self.Send_Us_A_Message_Phone, data.phone())
+        self.type(self.Send_Us_A_Message_Subject, data.subject())
+        self.type(self.Send_Us_A_Message_Message, data.message())
+
+    def submit_contact_form(self):
+        # scroll na dół strony
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        button = self.wait.until(EC.element_to_be_clickable(self.Send_Us_A_Message_Submit_Button))
+
+        # klik przez JS — jedyny stabilny sposób na tej stronie
+        self.driver.execute_script("arguments[0].click();", button)
