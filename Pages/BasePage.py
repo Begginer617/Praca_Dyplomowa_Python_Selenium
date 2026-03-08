@@ -6,9 +6,9 @@ class BasePage:
     # Konstruktor klasy.
     # slow=True → test działa wolniej (do podglądu).
     # delay → ile sekund czekać przed akcją.
-    def __init__(self, driver, slow=True, delay=0.1):
+    def __init__(self, driver, slow=True, delay=0.03):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 5)
+        self.wait = WebDriverWait(driver, 10)
         self.slow = slow
         self.delay = delay
 
