@@ -17,6 +17,7 @@ class DataGenerator:
 
     # Generuje numer telefonu o długości 11–21 znaków
     # Formularz wymaga min. 11 i max. 21 znaków
+    # https://docs.python.org/3.14/library/random.html#random.randint
     def phone(self):
         length = random.randint(11, 21)
         return ''.join(str(random.randint(0, 9)) for _ in range(length))
