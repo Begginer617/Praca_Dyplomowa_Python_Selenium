@@ -7,7 +7,6 @@ class HomePage(BasePage):
     # LOKALIZATORY
 
     URL = "https://automationintesting.online/"
-
     BOOK_NOW = (By.XPATH, '//a[contains(@href, "#booking")]')
     CHECK_AVAILABILITY = (By.XPATH, '//a[contains(@class, "openBooking")]')
     CHECK_IN = (By.XPATH, '//input[@id="checkin"]')
@@ -29,6 +28,12 @@ class HomePage(BasePage):
     Contact_Information_HOTEL_Address = (By.XPATH, '//*[@id="location"]/div/div[2]/div[2]/div/div/div[1]/div[2]/p')
     Contact_Information_HOTEL_Phone = (By.XPATH, '//*[@id="location"]/div/div[2]/div[2]/div/div/div[2]/div[2]/p')
     Contact_Information_HOTEL_Email = (By.XPATH, '//*[@id="location"]/div/div[2]/div[2]/div/div/div[3]/div[2]/p')
+    Single_Room= (By.XPATH, '//*[@id="rooms"]/div/div[2]/div[1]/div/div[2]/h5')
+    Single_Room_Description = (By.XPATH, '//*[@id="rooms"]//p[contains(text),"Aenean porttitor mauris")]')
+    Double_Room= (By.XPATH, '//*[@id="rooms"]/div/div[2]/div[2]/div/div[2]/h5')
+    Double_Room_Description = (By.XPATH, '//*[@id="rooms"]//p[contains(text(), "Vestibulum sollicitudin")]')
+    Suite_Room = (By.XPATH, '//*[@id="rooms"]//p[contains(text(), "Vestibulum sollicitudin")]')
+    Suite_Room_Description = (By.XPATH, '//*[@id="rooms"]/p[contains(text),"Etiam metus metus")]')
 
 
     # METODY
