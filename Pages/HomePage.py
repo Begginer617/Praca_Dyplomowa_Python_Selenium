@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class HomePage(BasePage):
+
     URL = "https://automationintesting.online/"
 
     Send_Us_A_Message_Name = (By.ID, "name")
@@ -12,6 +13,18 @@ class HomePage(BasePage):
     Send_Us_A_Message_Subject = (By.ID, "subject")
     Send_Us_A_Message_Message = (By.ID, "description")
     Send_Us_A_Message_Submit_Button = (By.XPATH, '//*[@id="contact"]//button')
+
+
+    HEADER = (By.XPATH, '//div[contains(@class, "modal")]//h2')
+    FIRST_NAME = (By.XPATH, '//input[@id="firstname"]')
+
+    def is_loaded(self):
+        return self.is_visible(self.HEADER)
+
+    # Wpisuje imię do pola "First name".
+    def fill_first_name(self, name):
+        self.type(self.FIRST_NAME, name)
+
 
     def open(self):
         self.driver.get(self.URL)
@@ -36,3 +49,17 @@ class HomePage(BasePage):
         # klik przez JS — jedyny stabilny sposób na tej stronie
         self.driver.execute_script("arguments[0].click();", button)
         return self
+
+    def open_in_calendar(self):
+        pass
+    def next_month(self):
+        pass
+    def previous_month(self):
+        pass
+    def pick_day(self):
+        pass
+    def open_check_in_calendar(self):
+        pass
+    def open_check_out_calendar(self):
+        pass
+

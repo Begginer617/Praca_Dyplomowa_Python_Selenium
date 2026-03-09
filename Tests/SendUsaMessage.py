@@ -11,5 +11,5 @@ def test_send_contact_message(driver):
     home.open()
     home.fill_contact_form_with_fake_data(data)
     home.submit_contact_form()
-    #  lub home.open().fill_contact_form_with_fake_data(data).submit_contact_form() jesli jest self we metodach
+
 
